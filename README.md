@@ -24,3 +24,15 @@ The in-app updater reads the latest published release from the GitHub Releases A
 - APK must be signed with the established FocusLock release certificate
 
 No release has been published yet. The updater will remain quiet until a newer compatible release with an APK asset is available.
+
+## One-time GitHub Actions setup
+
+In the **FocusLock** source repository, add these Actions repository secrets:
+
+- `FOCUSLOCK_RELEASES_TOKEN`: fine-grained token with Contents: Read and write access to `vyron2561/FocusLock-Releases`.
+- `FOCUSLOCK_KEYSTORE_BASE64`: Base64-encoded Android release keystore.
+- `FOCUSLOCK_KEYSTORE_PASSWORD`: keystore password.
+- `FOCUSLOCK_KEY_ALIAS`: signing key alias.
+- `FOCUSLOCK_KEY_PASSWORD`: signing key password.
+
+Keep the keystore and passwords private. The same keystore must be retained permanently for all future app updates. The source repository's `.github/workflows/publish-release.yml` builds and signs the APK when a `v*` tag is pushed, then publishes it here. Update `versionCode` and `versionName` in `app/build.gradle.kts` before creating each new version tag.
