@@ -1,60 +1,43 @@
-# FocusLock Website
+# FocusLock — Official Website
 
-The official Arabic-first website and public update API for FocusLock.
+Single-page Arabic landing page for FocusLock, inspired by the storytelling flow of modern focus-product websites.
 
 ## Stack
-
 - Next.js App Router
 - React + TypeScript
-- GitHub Releases as the public APK distribution channel
+- GitHub Releases for public APK distribution
 
 ## Run locally
-
 ```bash
 npm install
 npm run dev
 ```
 
-Open http://localhost:3000.
+## One-page site
+The public website is a single home page with in-page sections:
+- Home / hero
+- Features
+- How it works
+- Use cases
+- Download
+- FAQ
 
-## Release source
-
-The site reads published, stable releases from:
-
-`vyron2561/FocusLock-Releases`
-
-A release is shown only when it is published, is not a prerelease/draft, and contains an APK asset.
+APK release metadata is fetched from the public GitHub Releases API. The page automatically displays the latest published stable release containing an APK asset.
 
 ## Update API
+`GET /api/update/latest` provides version, APK URL, file size, release notes, published date, and SHA-256 when GitHub supplies an asset digest.
 
-`GET /api/update/latest`
+`GET /api/releases` returns the public release history for integrations.
 
-Returns the latest stable APK metadata:
-
-- `version`
-- `versionCode` (read from release notes when written as `versionCode: 123`)
-- `apkUrl`
-- `fileName`
-- `sizeBytes`
-- `sha256` (when GitHub provides an asset digest)
-- `releaseNotes`
-- `publishedAt`
-
-If no eligible release exists, the endpoint returns HTTP 404 with `available: false`.
-
-`GET /api/releases` returns the public release history.
-
-## Publishing a new APK
-
-1. Build a signed release APK in the private FocusLock source repository.
-2. Keep the same Android application ID and release signing key for every update.
+## Publish a new APK
+1. Build a signed release APK from the private FocusLock Android repository.
+2. Keep the same application ID and release signing key for every version.
 3. Increase `versionCode` and update `versionName`.
-4. Create a published GitHub Release in this repository with a matching tag such as `v1.0.1`.
-5. Attach the signed APK asset.
-6. Include `versionCode: 2` in the release notes so the website API can expose it.
+4. Create a published, non-prerelease GitHub Release here with a tag such as `v1.0.1`.
+5. Attach the signed APK.
+6. Include `versionCode: 2` in the release notes.
 
-Never commit keystores, passwords, personal access tokens, or signing credentials to this repository.
+Never commit signing keys, passwords, or private access tokens.
 
 ## Deployment
-
-Import this repository into Vercel and deploy it as a Next.js project. The website's API routes require a server runtime; do not deploy this project as a static-only export.
+Deploy as a Next.js server application (for example, on Vercel). Do not use static export because the update API needs a server runtime.
